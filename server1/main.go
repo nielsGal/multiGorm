@@ -12,7 +12,7 @@ type User{
 }
 
 func InitDatabase(){
-	DBConn, err = gorm.Open("postgres","rest.db")
+	DBConn, err = gorm.Open("postgres","host=database port=5432 user=niels dbname=test_database password=galjaard")
 	if err != nil {
 		panic("failed to connect to database")
 	}

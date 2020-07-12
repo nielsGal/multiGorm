@@ -5,4 +5,6 @@ services:
     env_file:
       - database.env # configure postgres
     volumes:
-      - database-data: ./data/postgres
+      - database-data:/data/postgres
+volumes:
+  database-data:
