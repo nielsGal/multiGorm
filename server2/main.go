@@ -17,18 +17,31 @@ var (
 
 func InitDatabase(){
 	var err error
-	DBConn, err = gorm.Open("postgres","host=localhost port=5432 user=niels dbname=test_database password=galjaard sslmode=disable")
+	DBConn, err = gorm.Open("postgres","host=localhost port=5432 user=postgres dbname=postgres password=example sslmode=disable")
 	if err != nil {
 		fmt.Println(err)
 		panic("failed to connect to database")
 	}
-	defer DBConn.Close()
 	DBConn.AutoMigrate(&User{})
 }
 
+func CreateUser(c *fiber.Ctx){
+	db := DBConn
+	user := new(User)
+	if err := c.BodyParser(user); err != nil{
+		c.Status(422).Send("some isse with this request")
+	}
+	if result := db.Create(user); result.Error != nil{
+		c.Status(422).Send("some isse with this request")
+	}
+	c.JSON(user)
+}
 
 func main() {
 	app := fiber.New()
+	app.Post("/user",CreateUser)
 	InitDatabase()
-	app.Listen(3000)
+	defer DBConn.Close()
+	app.Listen(3001)
+	
 }

@@ -1,12 +1,18 @@
-version: "3"
+version: "3.1"
+
+volumes:
+  database_data:
+    driver: local
+
 services:
-  database:
-    image: "postgres" # use latest official postgres version
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
     ports:
       - 5432:5432
-    env_file:
-      - database.env # configure postgres
     volumes:
-      - database-data:/data/postgres
-volumes:
-  database-data:
+      - database_data:/var/lib/postgresql/data
